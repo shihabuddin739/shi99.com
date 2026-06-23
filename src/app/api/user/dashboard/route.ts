@@ -12,7 +12,7 @@ export async function GET() {
     await dbConnect();
 
     // Auth Check
-    const cookieStore = cookies();
+    const cookieStore = await cookies();
     const token = cookieStore.get('token')?.value;
     if (!token) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
 
