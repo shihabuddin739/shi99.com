@@ -23,6 +23,7 @@ export default function Header() {
   const { user, login, logout, loading } = useAuth();
   const [username, setUsername] = useState('');
   const [password, setPassword] = useState('');
+  const [menuOpen, setMenuOpen] = useState(false);
 
   const items: MenuProps['items'] = [
     user?.role === 'admin'
@@ -62,73 +63,77 @@ export default function Header() {
   };
 
   return (
-    <header style={{ background: '#1a1a1a', borderBottom: '2px solid #fcd535' }}>
-      <div className="site-container" style={{ padding: '8px 0' }}>
+    <header className="app-header">
+      <div className="site-container header-inner">
         {/* Top Row */}
-        <div style={{ display: 'flex', alignItems: 'center', justifyContent: 'space-between', marginBottom: 12 }}>
+        <div className="header-top">
           {/* Logo */}
-          <Link href="/" style={{ display: 'flex', alignItems: 'center', gap: 8, textDecoration: 'none' }}>
-            <div style={{
-              width: 36, height: 36, background: '#fcd535', borderRadius: '50%',
-              display: 'flex', alignItems: 'center', justifyContent: 'center',
-              fontWeight: 'bold', color: '#1a1a1a', fontSize: '18px'
-            }}>
+          <Link href="/" className="header-brand">
+            <div className="header-brand-icon">
               🦁
             </div>
-            <span style={{ color: '#fcd535', fontSize: '28px', fontWeight: 900, letterSpacing: '-1px' }}>
-              Shi99<span style={{ color: '#fff', fontSize: '22px' }}>.com</span>
+            <span className="header-brand-text">
+              Shi99<span className="header-brand-sub">.com</span>
             </span>
           </Link>
 
+          <button
+            type="button"
+            className="header-hamburger"
+            onClick={() => setMenuOpen((prev) => !prev)}
+            aria-label="Toggle navigation"
+          >
+            {menuOpen ? '✕' : '☰'}
+          </button>
+
           {/* Auth & Lang */}
           {!loading && (
-            <div style={{ display: 'flex', alignItems: 'center', gap: 16 }}>
+            <div className="header-auth-row">
               {user ? (
                 <Space size="middle">
-                  <div style={{ textAlign: 'right', color: '#fff' }}>
-                    <div style={{ fontWeight: 'bold' }}>৳{(user.balance || 0).toLocaleString()}</div>
-                    <div style={{ fontSize: 12, color: '#a0a0a0' }}>{user.username}</div>
+                  <div className="header-user-info">
+                    <div className="header-balance">৳{(user.balance || 0).toLocaleString()}</div>
+                    <div className="header-username">{user.username}</div>
                   </div>
                   <Dropdown menu={{ items }} trigger={['click']} placement="bottomRight">
-                    <Button type="primary" style={{ background: '#fcd535', color: '#000', border: 'none' }}>
+                    <Button type="primary" className="header-account-button">
                       Account
                     </Button>
                   </Dropdown>
                 </Space>
               ) : (
-                <form onSubmit={handleLogin} style={{ display: 'flex', gap: 8, alignItems: 'center' }}>
-                  <Input 
-                    placeholder="ব্যবহারকারীর নাম" 
+                <form onSubmit={handleLogin} className="header-login-form">
+                  <Input
+                    placeholder="ব্যবহারকারীর নাম"
                     value={username}
                     onChange={(e) => setUsername(e.target.value)}
-                    style={{ background: '#333', border: '1px solid #555', color: '#fff', width: 140, borderRadius: 20 }}
+                    className="header-input"
                   />
-                  <Input.Password 
-                    placeholder="পাসওয়ার্ড" 
+                  <Input.Password
+                    placeholder="পাসওয়ার্ড"
                     value={password}
                     onChange={(e) => setPassword(e.target.value)}
-                    style={{ background: '#333', border: '1px solid #555', color: '#fff', width: 140, borderRadius: 20 }}
+                    className="header-input"
                   />
-                  <Button type="primary" htmlType="submit" style={{ background: '#666', border: 'none', borderRadius: 20 }}>
+                  <Button type="primary" htmlType="submit" className="header-submit-button">
                     লগইন
                   </Button>
                   <Link href="/register">
-                    <Button type="primary" style={{ background: '#fcd535', color: '#000', border: 'none', borderRadius: 20, fontWeight: 'bold' }}>
+                    <Button type="primary" className="header-register-button">
                       নিবন্ধন করুন
                     </Button>
                   </Link>
                 </form>
               )}
-              <div style={{ display: 'flex', alignItems: 'center', gap: 4, color: '#fff', cursor: 'pointer', marginLeft: 8 }}>
-                <span style={{ fontSize: '18px' }}>🇧🇩</span>
+              <div className="header-lang">
+                <span className="header-lang-flag">🇧🇩</span>
                 <span>বাংলা ▼</span>
               </div>
             </div>
           )}
         </div>
 
-        {/* Bottom Row - Navigation */}
-        <nav style={{ display: 'flex', justifyContent: 'center', gap: 32, paddingBottom: 8 }}>
+        <nav className={`header-nav ${menuOpen ? 'header-nav-open' : ''}`}>
           {[
             { label: 'হোম', icon: <HomeFilled style={{ color: '#fcd535' }} />, link: '/' },
             { label: 'ক্যাসিনো', icon: <AppstoreFilled style={{ color: '#eab308' }} />, link: '/casino' },
@@ -141,11 +146,8 @@ export default function Header() {
             { label: 'অফার', icon: <GiftFilled style={{ color: '#f59e0b' }} />, link: '/offers' },
             { label: 'পুরস্কার', icon: <TrophyFilled style={{ color: '#eab308' }} />, link: '/rewards' },
           ].map((item) => (
-            <Link key={item.label} href={item.link} style={{ 
-              display: 'flex', flexDirection: 'column', alignItems: 'center', gap: 4, 
-              color: item.label === 'হোম' ? '#fcd535' : '#fff', fontSize: 13, textDecoration: 'none' 
-            }}>
-              <div style={{ fontSize: 24, marginBottom: 2 }}>{item.icon}</div>
+            <Link key={item.label} href={item.link} className="header-nav-link">
+              <div className="header-nav-icon">{item.icon}</div>
               <span>{item.label}</span>
             </Link>
           ))}
