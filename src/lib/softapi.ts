@@ -1,12 +1,12 @@
 import crypto from 'crypto';
 
-const TOKEN = "3bef1fecabdcdd5896edd9e1febf56dc";
-const SECRET = "6ec179b179fc1e4dca307f26ea88dfd3";
-const SERVER_URL = "https://767fafapi.live/api/v1";
+const TOKEN = process.env.SOFTAPI_TOKEN || "3bef1fecabdcdd5896edd9e1febf56dc";
+const SECRET = process.env.SOFTAPI_SECRET || "6ec179b179fc1e4dca307f26ea88dfd3";
+const SERVER_URL = process.env.SOFTAPI_URL || "https://767fafapi.live/api/v1";
 
 export function encryptPayload(data: Record<string, unknown>): string {
   if (SECRET.length !== 32) {
-    throw new Error("Secret key must be exactly 32 characters");
+    throw new Error("SoftAPI secret key must be exactly 32 characters");
   }
   const json = JSON.stringify(data);
   const cipher = crypto.createCipheriv('aes-256-ecb', Buffer.from(SECRET), null);
